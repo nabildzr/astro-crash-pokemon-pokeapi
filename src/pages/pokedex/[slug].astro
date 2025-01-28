@@ -3,13 +3,11 @@ import { Image } from "astro:assets";
 import MainLayout from "../../layout/MainLayout.astro";
 import Description from "../../components/Description.astro";
 
-export const prerender = false;
-
 export async function getStaticPaths() {
-  const res = await fetch(`${import.meta.env.PUBLIC_BASE_URL}/pokemon`);
+  const res = await fetch(`${import.meta.env.PUBLIC_BASE_URL}`);
   const pokemons = await res.json();
 
-  return pokemons.map((pokemon: any) => ({
+  return pokemons.results.map((pokemon: { name: string }) => ({
     params: { slug: pokemon.name },
   }));
 }
