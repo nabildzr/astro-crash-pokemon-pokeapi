@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/pokedex/:slug", "destination": "/pokedex/[slug].astro" }
+  ]
+}

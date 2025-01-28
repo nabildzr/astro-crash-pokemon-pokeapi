@@ -1,14 +1,23 @@
 ---
-import { Image } from "astro:assets"
-import MainLayout from "../../layout/MainLayout.astro"
-import Description from "../../components/Description.astro"
+import { Image } from "astro:assets";
+import MainLayout from "../../layout/MainLayout.astro";
+import Description from "../../components/Description.astro";
 
-export const prerender = false
+export const prerender = false;
 
-const { slug } = Astro.params
+export async function getStaticPaths() {
+  const res = await fetch(`${import.meta.env.PUBLIC_BASE_URL}/pokemon`);
+  const pokemons = await res.json();
 
-const res = await fetch(`${import.meta.env.PUBLIC_BASE_URL}/${slug}`)
-const pokemon = await res.json()
+  return pokemons.map((pokemon: any) => ({
+    params: { slug: pokemon.name },
+  }));
+}
+
+const { slug } = Astro.params;
+
+const res = await fetch(`${import.meta.env.PUBLIC_BASE_URL}/${slug}`);
+const pokemon = await res.json();
 ---
 
 <MainLayout title={pokemon.name}>
