@@ -1,11 +1,44 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import MainLayout from "../layout/MainLayout.astro";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import { Image } from "astro:assets";
+
+const res = await fetch(import.meta.env.PUBLIC_BASE_URL + "?limit=10");
+const { results } = await res.json();
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<MainLayout title="poke">
+  <section class="grid grid-cols-5 gap-3">
+    {
+      results.map((pokemon: any) => (
+        <a href={`/pokedex/${pokemon.name}`}>
+          <div class="bg-white rounded-md transition-transform duration-200 ease-in-out hover:-translate-y-2">
+            <figure class="block w-full">
+              <Image
+                src={
+                  import.meta.env.PUBLIC_IMG_URL +
+                  pokemon.url.slice(34).replace("/", "") +
+                  ".png"
+                }
+								class="object-cover"
+                alt={pokemon.name}
+                width={300}
+                height={200}
+              />
+            </figure>
+            <div class="py-4">
+              <p class="text-slate-800 text-center text-large">
+								{pokemon.name}
+							</p>
+            </div>
+          </div>
+        </a>
+      ))
+    }
+  </section>
+  <div class="text-center mt-8">
+    <a
+      class="inline-block bg-orange-600 font-bold text-slate-100 px-4 py-2 rounded-md"
+      href="/pokedex">Load more Pokemon</a>
+  </div>
+</MainLayout>
